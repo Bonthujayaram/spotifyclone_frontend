@@ -1,7 +1,7 @@
 import type { Track } from '@/contexts/PlayerContext';
 import type { User } from '@/contexts/AuthContext';
 
-const AUTH_API_URL = 'http://localhost:5000/api';
+const AUTH_API_URL = import.meta.env.VITE_API_URL;
 
 interface LoginData {
   email: string;
@@ -308,7 +308,7 @@ export const authApi = {
   followUser: async (token: string, userId: string, artistData?: ExternalArtist): Promise<FollowResponse> => {
     const isAudiusArtist = userId.length < 24; // MongoDB IDs are 24 chars
     const endpoint = `${AUTH_API_URL}/follow/${userId}${isAudiusArtist ? '?platform=audius' : ''}`;
-    
+
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: {
@@ -332,7 +332,7 @@ export const authApi = {
   unfollowUser: async (token: string, userId: string): Promise<FollowResponse> => {
     const isAudiusArtist = userId.length < 24; // MongoDB IDs are 24 chars
     const endpoint = `${AUTH_API_URL}/follow/${userId}${isAudiusArtist ? '?platform=audius' : ''}`;
-    
+
     const response = await fetch(endpoint, {
       method: 'DELETE',
       headers: {
@@ -351,7 +351,7 @@ export const authApi = {
   getFollowStatus: async (token: string, userId: string): Promise<FollowStatusResponse> => {
     const isAudiusArtist = userId.length < 24; // MongoDB IDs are 24 chars
     const endpoint = `${AUTH_API_URL}/follow/${userId}/status${isAudiusArtist ? '?platform=audius' : ''}`;
-    
+
     const response = await fetch(endpoint, {
       headers: {
         'Authorization': `Bearer ${token}`,
