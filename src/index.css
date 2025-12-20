@@ -1,0 +1,131 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the music streaming design system */
+
+@layer base {
+  :root {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 252 100% 69%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 252 100% 69%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 16 16 20;
+    --sidebar-foreground: 250 250 250;
+    --sidebar-primary: 142 78 198;
+    --sidebar-primary-foreground: 255 255 255;
+    --sidebar-accent: 39 39 42;
+    --sidebar-accent-foreground: 250 250 250;
+    --sidebar-border: 39 39 42;
+    --sidebar-ring: 142 78 198;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    background: linear-gradient(to bottom, #121212 0%, #121212 100%);
+    color: rgb(var(--foreground));
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-muted/20;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted/60 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted/80;
+  }
+}
+
+@layer components {
+  .music-card {
+    @apply relative overflow-hidden rounded-xl bg-card/50 backdrop-blur-sm border border-border/50 hover:bg-card/80 transition-all duration-300 cursor-pointer;
+  }
+
+  .music-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .play-button {
+    @apply absolute bottom-4 right-4 w-12 h-12 bg-primary rounded-full flex items-center justify-center opacity-0 transition-all duration-300 hover:scale-110 shadow-lg;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-gradient-purple via-gradient-pink to-gradient-blue bg-clip-text text-transparent;
+  }
+
+  .glassmorphism {
+    @apply backdrop-blur-xl bg-white/5 border border-white/10;
+  }
+}
+
+/* Add a subtle overlay for sections to create depth */
+section, .bg-card {
+  background: rgba(255, 255, 255, 0.03);
+  transition: background-color 0.3s ease;
+}
+
+section:hover, .bg-card:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* Hide scrollbar but keep functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
+}
+
+/* Gradient text effect */
+.gradient-text {
+  background: linear-gradient(to right, #8e2de2, #4a00e0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Add any custom styles below */
