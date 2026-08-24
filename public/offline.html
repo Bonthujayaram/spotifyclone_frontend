@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EchoVibe Offline</title>
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Inter", system-ui, -apple-system, Segoe UI, sans-serif;
+        background: radial-gradient(circle at 20% 20%, #1f2f38 0%, #0b0f17 45%, #05070d 100%);
+        color: #e8ecf3;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+      .card {
+        width: min(420px, 100%);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 18px;
+        background: rgba(18, 23, 35, 0.85);
+        padding: 24px;
+        box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+      }
+      h1 {
+        margin: 0 0 10px;
+        font-size: 24px;
+      }
+      p {
+        margin: 0;
+        color: rgba(232, 236, 243, 0.78);
+        line-height: 1.5;
+      }
+      .btn {
+        display: inline-block;
+        margin-top: 16px;
+        background: #1db954;
+        color: #02150a;
+        font-weight: 700;
+        text-decoration: none;
+        border-radius: 999px;
+        padding: 10px 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>You're offline</h1>
+      <p>EchoVibe could not reach the network. Cached pages still work, and music will resume when connection returns.</p>
+      <a class="btn" href="/">Retry</a>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,10 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# react-router owns every path; public/_redirects covers this too, but keeping
+# it here means the rule survives even if the publish dir changes.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
