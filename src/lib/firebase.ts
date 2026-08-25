@@ -4,6 +4,7 @@ import {
   OAuthProvider,
   createUserWithEmailAndPassword,
   getAuth,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
   updateProfile,
@@ -62,6 +63,9 @@ export const firebaseAppleSignIn = async (): Promise<string> => {
   const { user } = await signInWithPopup(auth, provider);
   return user.getIdToken();
 };
+
+export const firebaseSendPasswordReset = (email: string): Promise<void> =>
+  sendPasswordResetEmail(auth, email);
 
 /** Turns Firebase's error codes into something worth showing a person. */
 export const firebaseErrorMessage = (error: unknown): string => {
