@@ -1,42 +1,48 @@
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import { PlayerProvider } from "@/contexts/PlayerContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import Layout from "./components/Layout";
-import Home from "./pages/Home";
-import Search from "./pages/Search";
-import Trending from "./pages/Trending";
-import Feed from "./pages/Feed";
-import NowPlaying from "./pages/NowPlaying";
-import Library from "./pages/Library";
-import Artist from "./pages/Artist";
-import NotFound from "./pages/NotFound";
-import Popular from "./pages/Popular";
-import Recent from "./pages/Recent";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import Playlist from "./pages/Playlist";
 
-// Route-split: heavy or rarely-visited pages stay out of the entry bundle.
+// Everything behind auth is route-split. The entry chunk that /login and
+// /signup must download is then just React + router + the two forms -- it used
+// to also carry Layout -> Sidebar -> SmartDiscoveryMap -> Leaflet (~400kB).
+const Layout = lazy(() => import("./components/Layout"));
+const Home = lazy(() => import("./pages/Home"));
+const Search = lazy(() => import("./pages/Search"));
+const Trending = lazy(() => import("./pages/Trending"));
+const Popular = lazy(() => import("./pages/Popular"));
+const Recent = lazy(() => import("./pages/Recent"));
+const Feed = lazy(() => import("./pages/Feed"));
+const NowPlaying = lazy(() => import("./pages/NowPlaying"));
+const Library = lazy(() => import("./pages/Library"));
+const Playlist = lazy(() => import("./pages/Playlist"));
+const Artist = lazy(() => import("./pages/Artist"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 const AIDJPage = lazy(() => import("./pages/AIDJPage"));
 const CreatorStudio = lazy(() => import("./pages/CreatorStudio"));
 const Upload = lazy(() => import("./pages/Upload"));
 const Profile = lazy(() => import("./pages/Profile"));
 
-const queryClient = new QueryClient();
+// Shown while a route chunk downloads. Without it the screen goes blank for a
+// beat right after login, which reads as the app hanging.
+const RouteFallback = () => (
+  <div className="flex h-screen items-center justify-center bg-background">
+    <div className="h-8 w-8 animate-spin rounded-full border-2 border-muted border-t-primary" />
+  </div>
+);
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <BrowserRouter>
+  <BrowserRouter>
       <AuthProvider>
         <PlayerProvider>
           <TooltipProvider>
-            <Suspense fallback={null}>
+            <Suspense fallback={<RouteFallback />}>
             <Routes>
               {/* Public routes */}
               <Route path="/login" element={<Login />} />
@@ -70,7 +76,6 @@ const App = () => (
         </PlayerProvider>
       </AuthProvider>
     </BrowserRouter>
-  </QueryClientProvider>
 );
 
 export default App;

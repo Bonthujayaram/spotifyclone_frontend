@@ -1,6 +1,6 @@
 import { Play, Heart, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
 import { authApi } from '@/lib/authApi';
 import type { Track } from '@/contexts/PlayerContext';
 import { usePlayer } from '@/contexts/PlayerContext';
@@ -9,13 +9,25 @@ const Recent = () => {
   const { toggleLike, isLiked, playTrack } = usePlayer();
   const token = localStorage.getItem('token');
 
-  const { data: response, isLoading } = useQuery({
-    queryKey: ['recentlyPlayed'],
-    queryFn: () => token ? authApi.getRecentlyPlayed(token) : Promise.reject('No token'),
-    enabled: !!token,
-  });
+  // Plain fetch, matching every other page. react-query was pulled in for this
+  // one query and cost ~40kB gzipped in the entry chunk that /login waits on.
+  const [tracks, setTracks] = useState<Track[]>([]);
+  const [isLoading, setIsLoading] = useState(!!token);
 
-  const tracks = response?.recentlyPlayed?.map(item => item.track) || [];
+  useEffect(() => {
+    if (!token) return;
+    let cancelled = false;
+
+    authApi.getRecentlyPlayed(token)
+      .then((res) => {
+        if (cancelled) return;
+        setTracks((res.recentlyPlayed || []).map((item) => item.track));
+      })
+      .catch((error) => console.error('Failed to load recently played:', error))
+      .finally(() => { if (!cancelled) setIsLoading(false); });
+
+    return () => { cancelled = true; };
+  }, [token]);
 
   return (
     <div className="p-6 space-y-8 animate-fade-in">
