@@ -2,11 +2,12 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { Globe2, Loader2, MapPin, Pause, Play, Sparkles } from 'lucide-react';
+import { Globe2, MapPin, Pause, Play, Sparkles } from 'lucide-react';
 import { CircleMarker, MapContainer, Popup, TileLayer, Tooltip, ZoomControl, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { searchSongs, type JioSaavnSong } from '@/services/musicService';
 import { usePlayer, type Track } from '@/contexts/PlayerContext';
+import Spinner from '@/components/Spinner';
 
 type LatLng = [number, number];
 
@@ -788,7 +789,7 @@ const SmartDiscoveryMap = ({ className, triggerVariant = 'card' }: SmartDiscover
               </div>
             ) : isLoading ? (
               <div className="flex h-full items-center justify-center text-muted-foreground">
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading regional trends...
+                <Spinner size={16} className="mr-2" /> Loading regional trends...
               </div>
             ) : (
               <div className="min-h-0 flex-1 overflow-hidden rounded-xl border border-border/60 bg-card/40">

@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Heart, MessageCircle, Repeat2, Share2, Play, Pause, Loader2, MoreHorizontal, Check } from 'lucide-react';
+import { Heart, MessageCircle, Repeat2, Share2, Play, Pause, MoreHorizontal, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { usePlayer, type Track } from '@/contexts/PlayerContext';
 import { searchSongs, type JioSaavnSong } from '@/services/musicService';
 import { useToast } from '@/hooks/use-toast';
+import Spinner from '@/components/Spinner';
 
 const Feed = () => {
   const [likedPosts, setLikedPosts] = useState<Set<number>>(new Set());
@@ -220,7 +221,7 @@ const Feed = () => {
                 className="h-12 w-12 rounded-full bg-primary text-primary-foreground transition-transform hover:scale-105"
               >
                 {pendingPostId === item.id ? (
-                  <Loader2 className="h-5 w-5 animate-spin" />
+                  <Spinner size={20} />
                 ) : resolvedTracks[item.id]?.id === currentTrack?.id && isPlaying ? (
                   <Pause className="h-5 w-5 fill-current" />
                 ) : (

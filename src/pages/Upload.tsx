@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ChangeEvent, type DragEvent, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Upload as UploadIcon, Music, Image, X, Play, Loader2 } from 'lucide-react';
+import { Upload as UploadIcon, Music, Image, X, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { authApi } from '@/lib/authApi';
 import { useToast } from '@/hooks/use-toast';
+import Spinner from '@/components/Spinner';
 
 const MAX_AUDIO_MB = 12;
 const MAX_IMAGE_MB = 4;
@@ -426,7 +427,7 @@ const Upload = () => {
           <Button type="submit" className="bg-primary hover:bg-primary/90" disabled={isUploading}>
             {isUploading ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                <Spinner size={16} className="mr-2" />
                 Uploading...
               </>
             ) : (

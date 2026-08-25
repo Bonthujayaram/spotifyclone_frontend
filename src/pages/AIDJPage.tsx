@@ -4,7 +4,6 @@ import {
   Bot,
   Flame,
   Gauge,
-  Loader2,
   ListPlus,
   Mic2,
   Pause,
@@ -25,6 +24,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { usePlayer, type Track } from '@/contexts/PlayerContext';
 import { useToast } from '@/hooks/use-toast';
 import { searchSongs, type JioSaavnSong } from '@/services/musicService';
+import Spinner from '@/components/Spinner';
 
 type TasteProfile = {
   id: string;
@@ -946,7 +946,7 @@ const AIDJPage = () => {
           <div className="flex-1 overflow-y-auto p-2">
             {loading ? (
               <div className="flex h-32 items-center justify-center text-muted-foreground">
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />Loading recommendations...
+                <Spinner size={16} className="mr-2" />Loading recommendations...
               </div>
             ) : recommendations.length === 0 ? (
               <div className="rounded-lg border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
@@ -1117,7 +1117,7 @@ const AIDJPage = () => {
                 disabled={crateLoading}
                 className="rounded-md border border-border bg-background/35 px-2 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:opacity-60"
               >
-                {crateLoading ? <Loader2 className="mr-1 inline h-3.5 w-3.5 animate-spin" /> : <Sparkles className="mr-1 inline h-3.5 w-3.5" />}
+                {crateLoading ? <Spinner size={14} className="mr-1" label={null} /> : <Sparkles className="mr-1 inline h-3.5 w-3.5" />}
                 Surprise
               </button>
             </div>

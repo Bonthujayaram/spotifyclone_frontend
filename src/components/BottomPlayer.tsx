@@ -2,13 +2,14 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import {
   Play, Pause, SkipBack, SkipForward,
   Shuffle, Repeat, Volume2, Volume1, VolumeX,
-  Heart, ListMusic, ScrollText, RefreshCw, Loader2
+  Heart, ListMusic, ScrollText, RefreshCw
 } from 'lucide-react';
 import { usePlayer } from '@/contexts/PlayerContext';
 import { cn } from '@/lib/utils';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { getLyrics, type LyricsResult } from '@/services/lyricsService';
+import Spinner from '@/components/Spinner';
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 const formatTime = (s: number) => {
@@ -352,7 +353,7 @@ const BottomPlayer = () => {
           <ScrollArea className="h-[calc(100vh-170px)] px-5 py-4">
             {lyricsLoading ? (
               <div className="flex h-48 items-center justify-center text-muted-foreground">
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Spinner size={16} className="mr-2" />
                 Loading lyrics...
               </div>
             ) : lyricsError ? (

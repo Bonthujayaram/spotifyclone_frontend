@@ -86,6 +86,12 @@ export default {
 				sm: 'calc(var(--radius) - 4px)'
 			},
 			keyframes: {
+				// iOS activity indicator: each bar fades from full to faint, and
+				// the staggered delays make the bright point sweep around.
+				'ios-spinner': {
+					'0%': { opacity: '1' },
+					'100%': { opacity: '0.15' }
+				},
 				'accordion-down': {
 					from: {
 						height: '0'
@@ -145,7 +151,8 @@ export default {
 				'fade-in': 'fade-in 0.3s ease-out',
 				'slide-in': 'slide-in 0.3s ease-out',
 				'scale-in': 'scale-in 0.2s ease-out',
-				'pulse-glow': 'pulse-glow 2s ease-in-out infinite'
+				'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
+				'ios-spinner': 'ios-spinner 1s linear infinite'
 			},
 			backgroundImage: {
 				'gradient-music': 'linear-gradient(135deg, #8B5CF6 0%, #EC4899 50%, #3B82F6 100%)',

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { authApi } from '@/lib/authApi';
 import type { Track } from '@/contexts/PlayerContext';
 import { usePlayer } from '@/contexts/PlayerContext';
+import Spinner from '@/components/Spinner';
 
 const Recent = () => {
   const { toggleLike, isLiked, playTrack } = usePlayer();
@@ -38,7 +39,7 @@ const Recent = () => {
 
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
-          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
+          <Spinner size={32} className="text-primary" />
         </div>
       ) : !token ? (
         <div className="text-center py-12 text-gray-400">

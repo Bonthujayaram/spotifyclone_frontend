@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
-import { Eye, EyeOff, Loader2, User } from 'lucide-react';
+import { Eye, EyeOff, User } from 'lucide-react';
+import Spinner from '@/components/Spinner';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { firebaseErrorMessage, firebaseSendPasswordReset } from '@/lib/firebase';
@@ -117,7 +118,7 @@ const AuthForm = ({ mode }: AuthFormProps) => {
             aria-label="Continue with Google"
             className="flex h-10 items-center justify-center rounded-md border border-border bg-background transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
           >
-            {busy === 'google' ? <Loader2 className="h-4 w-4 animate-spin" /> : <GoogleIcon />}
+            {busy === 'google' ? <Spinner size={18} label={null} /> : <GoogleIcon />}
           </button>
           <button
             type="button"
@@ -126,7 +127,7 @@ const AuthForm = ({ mode }: AuthFormProps) => {
             aria-label="Continue with Apple"
             className="flex h-10 items-center justify-center rounded-md border border-border bg-background text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
           >
-            {busy === 'apple' ? <Loader2 className="h-4 w-4 animate-spin" /> : <AppleIcon />}
+            {busy === 'apple' ? <Spinner size={18} label={null} /> : <AppleIcon />}
           </button>
         </div>
 
@@ -198,7 +199,7 @@ const AuthForm = ({ mode }: AuthFormProps) => {
             disabled={busy !== null}
             className="inline-flex h-10 w-full items-center justify-center whitespace-nowrap rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
           >
-            {busy === 'email' && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {busy === 'email' && <Spinner size={16} className="mr-2" label={null} />}
             {isSignup ? 'Create account' : 'Sign In'}
           </button>
         </form>

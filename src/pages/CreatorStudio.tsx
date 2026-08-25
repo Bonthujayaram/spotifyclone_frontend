@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { authApi, type CreatorDashboardResponse, type CreatorTrack } from '@/lib/authApi';
 import { useToast } from '@/hooks/use-toast';
 import { usePlayer, type Track } from '@/contexts/PlayerContext';
+import Spinner from '@/components/Spinner';
 
 const formatDuration = (seconds: number) => {
   const safeSeconds = Math.max(0, Math.floor(seconds || 0));
@@ -107,7 +108,7 @@ const CreatorStudio = () => {
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" onClick={() => void loadDashboard(false)} disabled={refreshing}>
-            <RefreshCw className={`mr-2 h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
+            {refreshing ? <Spinner size={16} className="mr-2" label={null} /> : <RefreshCw className="mr-2 h-4 w-4" />}
             Refresh
           </Button>
           <Button asChild>

@@ -8,6 +8,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import Spinner from "@/components/Spinner";
 
 // Everything behind auth is route-split. The entry chunk that /login and
 // /signup must download is then just React + router + the two forms -- it used
@@ -33,7 +34,7 @@ const Profile = lazy(() => import("./pages/Profile"));
 // beat right after login, which reads as the app hanging.
 const RouteFallback = () => (
   <div className="flex h-screen items-center justify-center bg-background">
-    <div className="h-8 w-8 animate-spin rounded-full border-2 border-muted border-t-primary" />
+    <Spinner size={32} className="text-primary" />
   </div>
 );
 
