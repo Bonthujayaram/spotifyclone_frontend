@@ -107,18 +107,9 @@ const AuthForm = ({ mode }: AuthFormProps) => {
           </div>
         </div>
 
-        {/* Apple and Google only -- these are the providers enabled in Firebase.
+        {/* Google and Apple only -- these are the providers enabled in Firebase.
             A third button that always errors is worse than no button. */}
         <div className="grid grid-cols-2 gap-2">
-          <button
-            type="button"
-            onClick={() => run('apple', loginWithApple)}
-            disabled={socialDisabled}
-            aria-label="Continue with Apple"
-            className="flex h-10 items-center justify-center rounded-md border border-border bg-background text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-          >
-            {busy === 'apple' ? <Loader2 className="h-4 w-4 animate-spin" /> : <AppleIcon />}
-          </button>
           <button
             type="button"
             onClick={() => run('google', loginWithGoogle)}
@@ -127,6 +118,15 @@ const AuthForm = ({ mode }: AuthFormProps) => {
             className="flex h-10 items-center justify-center rounded-md border border-border bg-background transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
           >
             {busy === 'google' ? <Loader2 className="h-4 w-4 animate-spin" /> : <GoogleIcon />}
+          </button>
+          <button
+            type="button"
+            onClick={() => run('apple', loginWithApple)}
+            disabled={socialDisabled}
+            aria-label="Continue with Apple"
+            className="flex h-10 items-center justify-center rounded-md border border-border bg-background text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+          >
+            {busy === 'apple' ? <Loader2 className="h-4 w-4 animate-spin" /> : <AppleIcon />}
           </button>
         </div>
 
