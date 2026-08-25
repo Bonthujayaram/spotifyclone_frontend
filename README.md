@@ -40,11 +40,11 @@ runtime. Changing one means rebuilding and redeploying.
 | Variable | Notes |
 |---|---|
 | `VITE_API_URL` | Backend base URL **including `/api`**, e.g. `http://localhost:5000/api` |
-| `VITE_APP_NAME` | Display name |
-| `VITE_JWT_LOCAL_STORAGE_KEY` | localStorage key for the token (`token`) |
-| `VITE_ENABLE_GOOGLE_LOGIN` | `true` / `false` |
-| `VITE_GOOGLE_CLIENT_ID` | Google Identity Services client ID |
-| `VITE_GOOGLE_ALLOWED_ORIGINS` | Comma-separated origins where Google sign-in may run |
+
+That is the only one. Firebase config lives in
+[src/lib/firebase.ts](src/lib/firebase.ts) rather than the environment: it is
+public client identification, and keeping it in source removes a way for the
+deploy to silently break sign-in.
 
 > **Never commit `.env`.** It is gitignored.
 
@@ -55,26 +55,26 @@ runtime. Changing one means rebuilding and redeploying.
 `netlify.toml` sets the build command, publish directory and the SPA fallback,
 so a fresh site needs no manual build config.
 
-Set the `VITE_*` variables under **Site configuration → Environment variables**,
-*not* in a committed file. At minimum `VITE_API_URL` must point at the deployed
-backend — if it is left at `http://localhost:5000/api`, the deployed site will
-try to call the visitor's own machine and every request will fail.
+Set `VITE_API_URL` under **Site configuration → Environment variables**, *not*
+in a committed file. It must point at the deployed backend — left at
+`http://localhost:5000/api`, the deployed site calls the visitor's own machine
+and every request fails.
 
-Two things must line up on the backend side:
+Two things elsewhere must name this site's URL, and both live in their own
+dashboards — so **renaming the Netlify site means updating them by hand**:
 
-- `CORS_ORIGIN` there must include this site's URL.
-- `VITE_GOOGLE_ALLOWED_ORIGINS` here, and the Authorized JavaScript Origins in
-  Google Cloud Console, must both include it too, or Google sign-in silently
-  refuses to render.
+- The backend's `CORS_ORIGIN` env var, or every API call returns 403.
+- Firebase → Authentication → Settings → **Authorized domains**, or Google and
+  Apple sign-in fail with `auth/unauthorized-domain`.
 
 ---
 
 ## Notes
 
-- The entry bundle is ~685 KB (205 KB gzipped). `Profile`, `AIDJPage`,
-  `CreatorStudio` and `Upload` are route-split; the rest is mostly Leaflet,
-  pulled in by the discovery map that renders in the sidebar on every page.
-  Gating that map behind its own dialog is the next real win.
+- The entry bundle is ~482 KB (135 KB gzipped) — React, the router, both
+  contexts, the auth screens and the Firebase Auth SDK. Everything behind auth
+  is route-split, including `Layout`, which is what keeps Leaflet off the login
+  page.
 - The catalog API (`saavn.sumit.co`) is a third-party mirror with no key, no
   SLA and no caching layer in front of it. If it goes down, search and playback
   go with it.
