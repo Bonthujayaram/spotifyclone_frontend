@@ -3,15 +3,6 @@ import type { User } from '@/contexts/AuthContext';
 
 const AUTH_API_URL = import.meta.env.VITE_API_URL;
 
-interface LoginData {
-  email: string;
-  password: string;
-}
-
-interface SignupData extends LoginData {
-  name?: string;
-}
-
 interface AuthResponse {
   token: string;
   user: User;
@@ -189,40 +180,6 @@ interface CreatorTrackEventPayload {
 }
 
 export const authApi = {
-  login: async (data: LoginData): Promise<AuthResponse> => {
-    const response = await fetch(`${AUTH_API_URL}/auth/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Failed to login');
-    }
-
-    return response.json();
-  },
-
-  signup: async (data: SignupData): Promise<AuthResponse> => {
-    const response = await fetch(`${AUTH_API_URL}/auth/signup`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Failed to signup');
-    }
-
-    return response.json();
-  },
-
   getCurrentUser: async (token: string) => {
     const response = await fetch(`${AUTH_API_URL}/auth/me`, {
       headers: {
@@ -671,18 +628,19 @@ export const authApi = {
   },
   
   // Google sign-in
-  googleSignIn: async (idToken: string): Promise<AuthResponse> => {
-    const response = await fetch(`${AUTH_API_URL}/auth/google`, {
+  /** Exchange a Firebase ID token for this app's own JWT + Mongo user record. */
+  firebaseSignIn: async (idToken: string): Promise<AuthResponse> => {
+    const response = await fetch(`${AUTH_API_URL}/auth/firebase`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ idToken }),
     });
 
     if (!response.ok) {
-      const error = await response.json().catch(() => ({ message: 'Google sign-in failed' }));
-      throw new Error(error.message || 'Google sign-in failed');
+      const error = await response.json().catch(() => ({ message: 'Sign-in failed' }));
+      throw new Error(error.message || 'Sign-in failed');
     }
 
     return response.json();
   },
-}; 
+};

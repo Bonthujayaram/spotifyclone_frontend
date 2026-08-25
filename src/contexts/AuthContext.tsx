@@ -1,6 +1,14 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authApi, type UserSettings } from '@/lib/authApi';
+import {
+  auth as firebaseAuth,
+  firebaseAppleSignIn,
+  firebaseEmailSignIn,
+  firebaseEmailSignUp,
+  firebaseGoogleSignIn,
+} from '@/lib/firebase';
+import { signOut as firebaseSignOut } from 'firebase/auth';
 
 interface ExternalArtist {
   platform: string;
@@ -31,6 +39,8 @@ interface AuthContextType {
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string, name?: string) => Promise<void>;
+  loginWithGoogle: () => Promise<void>;
+  loginWithApple: () => Promise<void>;
   logout: () => void;
   loading: boolean;
 }
@@ -93,37 +103,39 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     checkAuth();
   }, []);
 
+  // Firebase authenticates; the backend verifies the ID token and returns this
+  // app's JWT. Every other request keeps using that JWT exactly as before.
+  const completeSignIn = async (idToken: string) => {
+    const { token, user: userData } = await authApi.firebaseSignIn(idToken);
+    const completeUser = normalizeUser(userData);
+    setUser(completeUser);
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(completeUser));
+    localStorage.setItem('audio_quality', completeUser.settings?.audioQuality || 'auto');
+    navigate('/');
+  };
+
   const login = async (email: string, password: string) => {
-    try {
-      const { token, user: userData } = await authApi.login({ email, password });
-      const completeUser = normalizeUser(userData);
-      setUser(completeUser);
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(completeUser));
-      localStorage.setItem('audio_quality', completeUser.settings?.audioQuality || 'auto');
-      navigate('/'); // Redirect to home page after login
-    } catch (error) {
-      console.error('Login failed:', error);
-      throw error;
-    }
+    await completeSignIn(await firebaseEmailSignIn(email, password));
   };
 
   const signup = async (email: string, password: string, name?: string) => {
-    try {
-      const { token, user: userData } = await authApi.signup({ email, password, name });
-      const completeUser = normalizeUser(userData);
-      setUser(completeUser);
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(completeUser));
-      localStorage.setItem('audio_quality', completeUser.settings?.audioQuality || 'auto');
-      navigate('/'); // Redirect to home page after signup
-    } catch (error) {
-      console.error('Signup failed:', error);
-      throw error;
-    }
+    await completeSignIn(await firebaseEmailSignUp(email, password, name));
+  };
+
+  const loginWithGoogle = async () => {
+    await completeSignIn(await firebaseGoogleSignIn());
+  };
+
+  const loginWithApple = async () => {
+    await completeSignIn(await firebaseAppleSignIn());
   };
 
   const logout = () => {
+    // Clear the Firebase session too, or the next visit silently resumes it.
+    firebaseSignOut(firebaseAuth).catch((error) =>
+      console.warn('Firebase sign-out failed:', error),
+    );
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setUser(null);
@@ -136,6 +148,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       isAuthenticated: !!user,
       login,
       signup,
+      loginWithGoogle,
+      loginWithApple,
       logout,
       loading
     }}>
