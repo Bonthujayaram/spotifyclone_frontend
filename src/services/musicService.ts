@@ -20,6 +20,18 @@ export interface JioSaavnSong {
 // ── Internal helpers ──────────────────────────────────────────────────────────
 
 /**
+ * JioSaavn returns HTML-escaped titles, e.g. 'Aaya Sher (From &quot;The Family Star&quot;)'.
+ * A detached <textarea> decodes every entity for free: its content model is raw
+ * text, so nothing in the string is ever parsed as markup.
+ */
+function decodeHtmlEntities(value: string): string {
+    if (!value.includes('&')) return value;
+    const el = document.createElement('textarea');
+    el.innerHTML = value;
+    return el.value;
+}
+
+/**
  * Extract best image URL from JioSaavn image array.
  * Shape (per docs): [{ quality: "50x50"|"150x150"|"500x500", url: string }]
  */
@@ -87,12 +99,12 @@ function extractArtist(artists: unknown): string {
 function normalizeSong(song: any): JioSaavnSong {
     return {
         id: String(song.id ?? ''),
-        title: String(song.name ?? song.title ?? 'Unknown Title'),
-        artist: extractArtist(song.artists ?? song.primaryArtists ?? ''),
+        title: decodeHtmlEntities(String(song.name ?? song.title ?? 'Unknown Title')),
+        artist: decodeHtmlEntities(extractArtist(song.artists ?? song.primaryArtists ?? '')),
         image: extractImage(song.image),
         duration: Number(song.duration ?? 0),
         audioUrl: extractAudioUrl(song.downloadUrl),
-        album: typeof song.album === 'object' ? (song.album?.name ?? '') : String(song.album ?? ''),
+        album: decodeHtmlEntities(typeof song.album === 'object' ? (song.album?.name ?? '') : String(song.album ?? '')),
         year: String(song.year ?? ''),
         language: String(song.language ?? ''),
         playCount: Number(song.playCount ?? 0),

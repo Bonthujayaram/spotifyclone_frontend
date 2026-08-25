@@ -28,6 +28,16 @@ const CardSkeleton = () => (
   </div>
 );
 
+// The catalog comes from a third-party JioSaavn mirror with no SLA. When it is
+// down or rate-limited, searchSongs resolves to [] -- without this the section
+// renders a bare heading, which reads as "the app is broken" rather than
+// "the music service is unavailable".
+const SectionEmpty = () => (
+  <div className="rounded-xl border border-border/60 bg-card/50 px-4 py-6 text-sm text-muted-foreground">
+    Couldn't load tracks right now. The music service is unavailable — try again shortly.
+  </div>
+);
+
 const SkeletonRow = ({ count = 7 }: { count?: number }) => (
   <div className="flex gap-4 overflow-hidden">
     {Array.from({ length: count }).map((_, i) => (
@@ -130,15 +140,15 @@ const Home = () => {
       <RecentlyPlayedRow />
 
       <Section title="Trending Telugu Songs" icon={<Flame className="w-5 h-5 text-orange-400" />} link="/trending">
-        {loading.telugu ? <SkeletonRow /> : teluguTracks.map((t) => <MusicCard key={t.id} track={t} playlist={teluguTracks} />)}
+        {loading.telugu ? <SkeletonRow /> : teluguTracks.length === 0 ? <SectionEmpty /> : teluguTracks.map((t) => <MusicCard key={t.id} track={t} playlist={teluguTracks} />)}
       </Section>
 
       <Section title="Hindi Bollywood Hits" icon={<Sparkles className="w-5 h-5 text-yellow-400" />}>
-        {loading.hindi ? <SkeletonRow /> : hindiTracks.map((t) => <MusicCard key={t.id} track={t} playlist={hindiTracks} />)}
+        {loading.hindi ? <SkeletonRow /> : hindiTracks.length === 0 ? <SectionEmpty /> : hindiTracks.map((t) => <MusicCard key={t.id} track={t} playlist={hindiTracks} />)}
       </Section>
 
       <Section title="Arijit Singh Hits" icon={<Mic2 className="w-5 h-5 text-blue-400" />}>
-        {loading.arijit ? <SkeletonRow /> : arijitTracks.map((t) => <MusicCard key={t.id} track={t} playlist={arijitTracks} />)}
+        {loading.arijit ? <SkeletonRow /> : arijitTracks.length === 0 ? <SectionEmpty /> : arijitTracks.map((t) => <MusicCard key={t.id} track={t} playlist={arijitTracks} />)}
       </Section>
     </div>
   );
